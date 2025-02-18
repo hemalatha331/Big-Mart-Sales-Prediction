@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+  <title>Big Mart Sales Prediction</title>
+  <meta charset="utf-8">
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+  <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+
+  <style>
+    body {
+      background: url('{{ url_for('static', filename='images/i1.jpg') }}') no-repeat center center fixed;
+      background-size: cover;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      margin: 0;
+    }
+
+    .card {
+      box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+      transition: 0.3s;
+      border-radius: 10px;
+      padding: 20px;
+      max-width: 500px;
+      width: 90%;
+      background: rgba(255, 255, 255, 0.9);
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .card:hover {
+      box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    }
+
+    .form-group label {
+      margin-top: 10px;
+    }
+
+    .form-control {
+      background: rgba(255, 255, 255, 0.9);
+      border: 1px solid #ced4da;
+    }
+
+    h1 {
+      text-align: center;
+      color: green;
+    }
+
+    @media (max-width: 768px) {
+      .card {
+        max-width: 90%;
+        padding: 15px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <h1><b>Big Mart Sales Prediction</b></h1>
+  <br>
+
+  <form action="/predict" method="post">
+    <div class="form-group">
+      <label for="item_weight">Enter Item Weight</label>
+      <input type="text" name="item_weight" id="item_weight" class="form-control" value="{{ item_weight }}" required>
+    </div>
+
+    <div class="form-group">
+      <label for="item_fat_content">Item Fat Content</label>
+      <select class="form-control" name="item_fat_content" id="item_fat_content" required>
+        <option value="" {% if item_fat_content == '' %} selected {% endif %} disabled>Select Item Fat Content</option>
+        <option value="Low Fat" {% if item_fat_content == 'Low Fat' %} selected {% endif %}>Low Fat</option>
+        <option value="Regular" {% if item_fat_content == 'Regular' %} selected {% endif %}>Regular</option>
+        <option value="High Fat" {% if item_fat_content == 'High Fat' %} selected {% endif %}>High Fat</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="item_visibility">Enter Item Visibility</label>
+      <input type="text" name="item_visibility" id="item_visibility" class="form-control" value="{{ item_visibility }}" required>
+    </div>
+
+    <div class="form-group">
+      <label for="item_type">Item Type</label>
+      <select class="form-control" name="item_type" id="item_type" required>
+        <option value="" {% if item_type == '' %} selected {% endif %} disabled>Select Item Type</option>
+        <option value="Baking Goods" {% if item_type == 'Baking Goods' %} selected {% endif %}>Baking Goods</option>
+        <option value="Breads" {% if item_type == 'Breads' %} selected {% endif %}>Breads</option>
+        <option value="Breakfast" {% if item_type == 'Breakfast' %} selected {% endif %}>Breakfast</option>
+        <option value="Canned" {% if item_type == 'Canned' %} selected {% endif %}>Canned</option>
+        <option value="Dairy" {% if item_type == 'Dairy' %} selected {% endif %}>Dairy</option>
+        <option value="Frozen Foods" {% if item_type == 'Frozen Foods' %} selected {% endif %}>Frozen Foods</option>
+        <option value="Fruits and Vegetables" {% if item_type == 'Fruits and Vegetables' %} selected {% endif %}>Fruits and Vegetables</option>
+        <option value="Hard Drinks" {% if item_type == 'Hard Drinks' %} selected {% endif %}>Hard Drinks</option>
+        <option value="Health and Hygiene" {% if item_type == 'Health and Hygiene' %} selected {% endif %}>Health and Hygiene</option>
+        <option value="Household" {% if item_type == 'Household' %} selected {% endif %}>Household</option>
+        <option value="Meat" {% if item_type == 'Meat' %} selected {% endif %}>Meat</option>
+        <option value="Others" {% if item_type == 'Others' %} selected {% endif %}>Others</option>
+        <option value="Seafood" {% if item_type == 'Seafood' %} selected {% endif %}>Seafood</option>
+        <option value="Snack Foods" {% if item_type == 'Snack Foods' %} selected {% endif %}>Snack Foods</option>
+        <option value="Soft Drinks" {% if item_type == 'Soft Drinks' %} selected {% endif %}>Soft Drinks</option>
+        <option value="Starchy Foods" {% if item_type == 'Starchy Foods' %} selected {% endif %}>Starchy Foods</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="item_mrp">Enter Item MRP</label>
+      <input type="text" name="item_mrp" id="item_mrp" class="form-control" value="{{ item_mrp }}" required>
+    </div>
+
+    <div class="form-group">
+      <label for="outlet_identifier">Outlet Identifier</label>
+      <select class="form-control" name="outlet_identifier" id="outlet_identifier" required>
+        <option value="" {% if outlet_identifier == '' %} selected {% endif %} disabled>Select Outlet Identifier</option>
+        <option value="OUT010" {% if outlet_identifier == 'OUT010' %} selected {% endif %}>OUT010</option>
+        <option value="OUT013" {% if outlet_identifier == 'OUT013' %} selected {% endif %}>OUT013</option>
+        <option value="OUT017" {% if outlet_identifier == 'OUT017' %} selected {% endif %}>OUT017</option>
+        <option value="OUT018" {% if outlet_identifier == 'OUT018' %} selected {% endif %}>OUT018</option>
+        <option value="OUT019" {% if outlet_identifier == 'OUT019' %} selected {% endif %}>OUT019</option>
+        <option value="OUT027" {% if outlet_identifier == 'OUT027' %} selected {% endif %}>OUT027</option>
+        <option value="OUT035" {% if outlet_identifier == 'OUT035' %} selected {% endif %}>OUT035</option>
+        <option value="OUT045" {% if outlet_identifier == 'OUT045' %} selected {% endif %}>OUT045</option>
+        <option value="OUT046" {% if outlet_identifier == 'OUT046' %} selected {% endif %}>OUT046</option>
+        <option value="OUT049" {% if outlet_identifier == 'OUT049' %} selected {% endif %}>OUT049</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="outlet_establishment_year">Outlet Establishment Year (YYYY)</label>
+      <input type="text" name="outlet_establishment_year" id="outlet_establishment_year" class="form-control" value="{{ outlet_establishment_year }}" required>
+    </div>
+
+    <div class="form-group">
+      <label for="outlet_size">Outlet Size</label>
+      <select class="form-control" name="outlet_size" id="outlet_size" required>
+        <option value="" {% if outlet_size == '' %} selected {% endif %} disabled>Select Outlet Size</option>
+        <option value="High" {% if outlet_size == 'High' %} selected {% endif %}>High</option>
+        <option value="Medium" {% if outlet_size == 'Medium' %} selected {% endif %}>Medium</option>
+        <option value="Small" {% if outlet_size == 'Small' %} selected {% endif %}>Small</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="outlet_location_type">Outlet Location Type</label>
+      <select class="form-control" name="outlet_location_type" id="outlet_location_type" required>
+        <option value="" {% if outlet_location_type == '' %} selected {% endif %} disabled>Select Outlet Location Type</option>
+        <option value="Tier 1" {% if outlet_location_type == 'Tier 1' %} selected {% endif %}>Tier 1</option>
+        <option value="Tier 2" {% if outlet_location_type == 'Tier 2' %} selected {% endif %}>Tier 2</option>
+        <option value="Tier 3" {% if outlet_location_type == 'Tier 3' %} selected {% endif %}>Tier 3</option>
+      </select>
+    </div>
+
+    <div class="form-group">
+      <label for="outlet_type">Outlet Type</label>
+      <select class="form-control" name="outlet_type" id="outlet_type" required>
+        <option value="" {% if outlet_type == '' %} selected {% endif %} disabled>Select Outlet Type</option>
+        <option value="Grocery Store" {% if outlet_type == 'Grocery Store' %} selected {% endif %}>Grocery Store</option>
+        <option value="Supermarket Type1" {% if outlet_type == 'Supermarket Type1' %} selected {% endif %}>Supermarket Type1</option>
+        <option value="Supermarket Type2" {% if outlet_type == 'Supermarket Type2' %} selected {% endif %}>Supermarket Type2</option>
+        <option value="Supermarket Type3" {% if outlet_type == 'Supermarket Type3' %} selected {% endif %}>Supermarket Type3</option>
+      </select>
+    </div>
+
+    <div class="form-group text-center">
+      <input type="submit" class="btn btn-primary" value="Submit">
+      <button type="button" class="btn btn-danger" onclick="resetForm()">Reset</button>
+    </div>
+  </form>
+
+  {% if prediction_text %}
+  <div class="alert alert-success text-center" role="alert">
+    {{ prediction_text }}
+  </div>
+  {% endif %}
+</div>
+
+<script>
+  function resetForm() {
+    document.getElementById("item_weight").value = "";
+    document.getElementById("item_fat_content").selectedIndex = 0;
+    document.getElementById("item_visibility").value = "";
+    document.getElementById("item_type").selectedIndex = 0;
+    document.getElementById("item_mrp").value = "";   
+    document.getElementById("outlet_identifier").selectedIndex = 0;
+    document.getElementById("outlet_establishment_year").value = "";
+    document.getElementById("outlet_size").selectedIndex = 0;
+    document.getElementById("outlet_location_type").selectedIndex = 0;
+    document.getElementById("outlet_type").selectedIndex = 0;
+  }
+</script>
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+
+</body>
+</html>
+
